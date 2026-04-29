@@ -448,11 +448,16 @@ class GestureHandlerOrchestrator(
       return
     }
 
-    gestureHandlers.add(handler)
     handler.isActive = false
     handler.isAwaiting = false
     handler.activationIndex = Int.MAX_VALUE
     handler.prepare(view, this)
+
+    if (!handler.shouldBeginWithRecordedHandlers(gestureHandlers)) {
+      handler.cancel()
+    }
+
+    gestureHandlers.add(handler)
   }
 
   private fun isViewOverflowingParent(view: View): Boolean {
